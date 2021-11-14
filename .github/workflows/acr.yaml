@@ -17,4 +17,22 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: acr03iihho.azurecr.io/${{ github.repository_owner }}/flaskapp:latest
+        tags: acr03iihho.azurecr.io/${{ github.repository_owner }}/flaskapp:docker-cli
+  az-cli:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+    - name: az login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIAL }}
+    - name: az acr login
+      run: |
+        az acr login --name acr03iihho
+    - name: build
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: acr03iihho.azurecr.io/${{ github.repository_owner }}/flaskapp:az-cli
